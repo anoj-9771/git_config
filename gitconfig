@@ -1,0 +1,89 @@
+[user]
+	email = mohankumaryum@gmail.com
+	name = Mohan Kumar
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[alias]
+	# bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs git branch -d; }; f"
+	aa = add -A .
+#	aacm = !git add -A . && git commit -m
+	aliases = config --get-regexp alias
+	amend = commit --amend -m
+#	amend = commit -a --amend
+	bclean = "!f() { git branch --merged ${1-master} | grep -vE '(master|production)' | xargs git branch -d; }; f"	
+	bdone = "!f() { git checkout ${1-master} && git up && git bclean ${1-master}; }; f"	
+	br = branch
+	brD = branch -D
+	brd = branch -d
+	cane = commit --amend --no-edit
+	ci = commit
+	cm = !git add -A && git commit -m
+#	cm = commit -m
+	co = checkout
+	cob = checkout -b
+	coo = !git fetch && git checkout
+	cp = cherry-pick
+	d = diff
+	dev = !git checkout dev && git pull origin dev
+	dump = cat-file -p	
+	ec = config --global -e
+	f = "!git ls-files | grep -i"
+	forget = rm --cached
+	gcb = checkout -b
+	gr = grep -Ii
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	in = !git fetch && git log --oneline --graph ..@{u}
+	la = "!git config -l | grep alias | cut -c 7-"
+	last = log -1 HEAD
+	leaderboard = shortlog -s -n	
+	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+	lo = log --oneline -n 10
+	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+	master = !git checkout master && git pull origin 
+	merged = branch --merged
+	out = log --oneline --graph @{u}..
+	plo = pull origin
+	plod = pull origin dev
+	ploh = pull origin HEAD
+	plom = pull origin master
+	plos = pull origin staging
+	po = push origin
+	pod = push origin dev
+	pogm = !git push origin gh-pages && git checkout master && git pull origin master && git rebase gh-pages && git push origin master && git checkout gh-pages
+	poh = push origin HEAD
+	pom = push origin master
+	pomg = !git push origin master && git checkout gh-pages && git pull origin gh-pages && git rebase master && git push origin gh-pages && git checkout master
+	pos = push origin staging
+	pr = pull --rebase
+	pushit = "!f() { git rev-parse --abbrev-ref HEAD ; }; git push --set-upstream origin `f`"
+	ready = !git add --all && git status -sb
+	rollback = reset HEAD~
+	s = status --short --branch
+	save = !git add -A && git commit -m 'SAVEPOINT'
+	st = status
+	staging = !git checkout staging && git pull origin staging
+	type = cat-file -t
+	undo = reset HEAD~1 --mixed
+	unstage = reset --soft HEAD^
+	unstage = reset HEAD --
+	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
+	wip = !git add -u && git commit -m "WIP"
+	wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+[push]
+	default = matching
+
+# add this to ~/.gitconfig:
+[core]
+	excludesfile = 
+	autocrlf = true
+[difftool "sourcetree"]
+	cmd = '' \"$LOCAL\" \"$REMOTE\"
+[mergetool "sourcetree"]
+	cmd = "'' "
+	trustExitCode = true
+[credential]
+	helper = !aws codecommit credential-helper --profile=mohankumaryum $@
+	UseHttpPath = true
